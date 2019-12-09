@@ -1,37 +1,43 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {bindActionCreators, Dispatch} from 'redux';
-import {IStore} from '../../../Models';
-import * as MainActions from '../Actions/MainActions';
+import {Dispatch} from 'redux';
+import {IStore} from '../../../Core/Models';
+import {MainActions} from '../Actions/MainActions';
+import {IActions} from '../Actions/MainActions';
+import {IData} from '../Models';
+import {MainServices} from '../Services/MainServices';
 
 /**
- * Модель props в на странице Main.
+ * Модель props на странице Main.
  *
- * @prop {string} data Данные из БД.
- * @prop {IMainActions} mainActions Экшены.
+ * @prop {IMainActions} [actions] Экшены.
+ * @prop {IData} [asyncData] Данные с бэка.
  */
 export interface IMainProps {
-    data?: string;
-    mainActions?: any;
+    actions?: IActions;
+    asyncData?: IData;
 }
 
 class Main extends React.Component<IMainProps, {}> {
     componentDidMount = () => {
-        this.props.mainActions.getData();
+        this.props.actions.getData();
     };
 
     render(): JSX.Element {
-        const {data} = this.props;
+        const {
+            asyncData: {data},
+        } = this.props;
 
         return <div>{data}</div>;
     }
 }
 
 const mapStateToProps = (store: IStore) => ({
-    data: store.mainReducer.data,
+    asyncData: store.mainReducer.asyncData,
 });
+
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    mainActions: bindActionCreators(MainActions, dispatch),
+    actions: new MainActions(dispatch, new MainServices()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
