@@ -18,19 +18,13 @@ export interface IMainProps {
     asyncData?: IData;
 }
 
-class Main extends React.Component<IMainProps, {}> {
-    componentDidMount = () => {
-        this.props.actions.getData();
-    };
+const Main = ({actions, asyncData: {data}}: IMainProps) => {
+    React.useEffect(() => {
+        actions.getData();
+    }, []);
 
-    render(): JSX.Element {
-        const {
-            asyncData: {data},
-        } = this.props;
-
-        return <div>{data}</div>;
-    }
-}
+    return <div>{data}</div>;
+};
 
 const mapStateToProps = (store: IStore) => ({
     asyncData: store.mainReducer.asyncData,

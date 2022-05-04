@@ -1,3 +1,5 @@
+import axios from 'axios';
+import {REST} from '../../../Core/Consts';
 import {IData} from '../Models';
 
 /**
@@ -18,11 +20,6 @@ export class MainServices implements IServices {
      * @inheritdoc
      */
     getData = (): Promise<IData> => {
-        return new Promise((resolve) => {
-            // Имитация задержки сервера.
-            setTimeout(() => {
-                resolve({data: ['a', 'b']});
-            }, 1000);
-        });
+        return axios.get(`${REST}/getData`);
     };
 }
